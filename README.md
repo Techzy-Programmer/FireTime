@@ -8,7 +8,7 @@
 You need to reference the dll file manually inside your project. <br/>
 You can use either of these two methods to get started.
 * Build the project in Visual Studio 2019 by yourself.
-* Or Checkout the **Releases** section of this repository to download binaries. [Currently Unavailable]
+* Or Checkout the **Releases** section of this repository to download binaries.
 > Project will be shipped to **Nuget PM** very soon.... 😀
 ----
 
