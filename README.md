@@ -130,7 +130,7 @@ Please check below to know how to contribute.
 ~~~~
 
 * #### Technical Contributions
-###### If you're a developer and know c# and .net languages then you can contribute. If you find any issue or bug then kindly initiale a issue request on github asap and mention the file and line mo where you are having the problems with potential fixes. If you want to request for new feature or for any code fixes then initiate a pull request with proper comments and label, I will verify and merge it.
+###### If you're a developer and know c# and .net languages then you can contribute. If you find any issue or bug then kindly initiale a issue request on github asap and mention the file and line number where you are having the problems with potential fixes (if any). If you want to request for new feature or for any code fixes then initiate a pull request with proper comments and label, I will verify and merge it.
 
 * #### Financial Contributions
 ###### If you are not from a technical background and found this library useful then you can donate us to contribute financially.<br/> I accept Bitcoin(BTC), Litecoin(LTC), Ethereum(ETH) and Dogecoin(DOGE)<br/> Any support to the following crypto addresses is appreciated:
