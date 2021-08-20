@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FireTime</name>
+    </assembly>
+    <members>
+        <member name="T:FireTime.FireClient">
+            <summary>
+            Create instance of this class to start using the power of Firebase inside C#.Net
+            </summary>
+        </member>
+        <member name="M:FireTime.FireClient.#ctor(FireTime.FireConfig)">
+            <summary>
+            <para>Base class to access the Firebase services</para>
+            <para>An error will be thrown if wrongly formatted URL is provided in the FireConfig object</para>
+            </summary>
+            <param name="FConfig">Settings and rules for connecting with Firebase services</param>
+        </member>
+        <member name="M:FireTime.FireClient.AttachListner(System.String)">
+            <summary>
+            <para>Call this method to attach a listner to the firebase realtime database instance.</para>
+            <para>Exception will be thrown if initial request to the server resource fails</para>
+            <para>NOTE : This will increase the simultaneous connection limit from your firebase quota by 1.</para>
+            </summary>
+            <param name="MonitorPath">The relative path at which you would like to listen for Realtime Database changes</param>
+            <returns>The stream response which you can use to subscribe to any specific event</returns>
+        </member>
+        <member name="M:FireTime.FireClient.ReadAsync(System.String)">
+            <summary>
+            Reads the remote json file using the Http GET request from Firebase Realtime Database
+            </summary>
+            <param name="ReadPath">The relative path from where you would like to read data</param>
+            <returns>A FireResponse object containing all information regarding the current request</returns>
+        </member>
+        <member name="M:FireTime.FireClient.WriteAsync(System.String,System.Object)">
+            <summary>
+            Write data to Firebase Realtime Database using the Http PUT request
+            </summary>
+            <param name="WritePath">The relative path as on the server where you would like to write data</param>
+            <param name="WriteData">The data to write on server it can be either a valid JSON string, a dynamic or anonymous object, a Dictionary object or a custom typed object</param>
+            <returns>A FireResponse object containing all information regarding the current request</returns>
+        </member>
+        <member name="M:FireTime.FireClient.UpdateAsync(System.String,System.Object)">
+            <summary>
+            Update data to Firebase Realtime Database using the Http PATCH request
+            </summary>
+            <param name="UpdatePath">The relative path as on the server where you would like to update data</param>
+            <param name="UpdateData">The data used to update (replace values) on server it can be either a valid JSON string, a dynamic or anonymous object, a Dictionary object or a custom typed object</param>
+            <returns>A FireResponse object containing all information regarding the current request</returns>
+        </member>
+        <member name="M:FireTime.FireClient.RemoveAsync(System.String)">
+            <summary>
+            Remove data will all child nodes from the Firebase Realtime Database using the Http DELETE request
+            </summary>
+            <param name="RemovePath">The relative path as on the server where you would like to perform completed deletion</param>
+            <returns>A FireResponse object containing all information regarding the current request</returns>
+        </member>
+        <member name="T:FireTime.Response.FireResponse">
+            <summary>
+            Response class for accessing the Rest [JSON] Response into raw or various other formats
+            </summary>
+        </member>
+        <member name="P:FireTime.Response.FireResponse.HasError">
+            <summary>
+            <para>Implement this check to be sure if your request was successful or not</para>
+            <para>Returns true if request failed or false if sucess response was received from the server</para>
+            </summary>
+        </member>
+        <member name="P:FireTime.Response.FireResponse.RawJSON">
+            <summary>
+            Get basic response as JSON string received from the server
+            </summary>
+        </member>
+        <member name="P:FireTime.Response.FireResponse.GetErrorMSG">
+            <summary>
+            Use this property to retrieve the Error message string. This property will return null if there was no error while making the request
+            </summary>
+        </member>
+        <member name="P:FireTime.Response.FireResponse.IsConvertible">
+            <summary>
+            <para>Check this property to know if the response received from server has key-value pair and is convertible to other types such as JObject or a Custom typed object</para>
+            <para>You will get a null value on JObject, or Custom typed object if this property returns false. Hence it is recommended to use this property before accessing "GetAsJObject", or "GetAs&lt;T&gt;()" method.</para>
+            </summary>
+        </member>
+        <member name="P:FireTime.Response.FireResponse.GetAsJObject">
+            <summary>
+            <para>Get a dynamic JObject out of the json response received from Firebase database server</para>
+            <para>Please implement IsConvertible check first if it returns true then you can easily access this object otherwise you may get a null value</para>
+            </summary>
+        </member>
+        <member name="P:FireTime.Response.FireResponse.GetHttpStatusCode">
+            <summary>
+            Get the Http status response code.
+            </summary>
+        </member>
+        <member name="M:FireTime.Response.FireResponse.GetAs``1">
+            <summary>
+            <para>Get a Custom typed object out of the json response received from Firebase database server</para>
+            <para>NOTE : Some property value of your Class object may be null if it is not mapped properly.</para>
+            <para>Please implement IsConvertible check first if it returns true then you can easily access this object otherwise you may get a null value</para>
+            </summary>
+            <typeparam name="T">Custom type class with fields mapped to server JSON structure</typeparam>
+            <returns>A custom object or null if the method fails</returns>
+        </member>
+        <member name="T:FireTime.Response.StreamResponse">
+            <summary>
+            Monitor at any nested path usin this class
+            </summary>
+        </member>
+        <member name="P:FireTime.Response.StreamResponse.RootDataBranch">
+            <summary>
+            <para>Get the copy of local cache which represents the synchronized state of data with the server</para>
+            <para>It contains the data from the branch which you have selected to Listen</para>
+            <para>You may get a null or empty object if there is no data (or if the data was deleted) on the server at the selected path</para>
+            </summary>
+        </member>
+        <member name="P:FireTime.Response.StreamResponse.Changes">
+            <summary>
+            Utilise this property to subscribe to the streaming events of Firebase
+            </summary>
+        </member>
+        <member name="M:FireTime.Response.StreamResponse.Detach">
+            <summary>
+            Call this method to detach the listner and release all associated resources.
+            </summary>
+        </member>
+        <member name="T:FireTime.FireConfig">
+            <summary>
+            Use this class to set custom protocols for connecting to the Firebase Realtime Database!
+            </summary>
+        </member>
+        <member name="P:FireTime.FireConfig.FirebaseURL">
+            <summary>
+            <para>Initial and the root URL of your Firebase database. The url should be in the following formats</para>
+            <para>Either : https://{your-dbname}.{location-prefix}.firebasedatabase.app</para>
+            <para>Or : https://{your-dbname}.firebaseio.com</para>
+            </summary>
+        </member>
+        <member name="P:FireTime.FireConfig.AuthToken">
+            <summary>
+            Pass in the authentication token(auth) if your databese is protected by security rules
+            </summary>
+        </member>
+        <member name="P:FireTime.FireConfig.BearerToken">
+            <summary>
+            Pass in the bearer token for accesing database resources if it requires special OAuth or Custom login method
+            </summary>
+        </member>
+        <member name="T:FireTime.FireError">
+            <summary>
+            FireTime custom error class derived from base System.Exception class
+            </summary>
+        </member>
+        <member name="P:FireTime.FireError.Message">
+            <summary>
+            Get the error message specific to the current error
+            </summary>
+        </member>
+        <member name="T:FireTime.FireStreamEvent">
+            <summary>
+            Listen for the events from the live streaming API of Firebase
+            </summary>
+        </member>
+        <member name="E:FireTime.FireStreamEvent.OnError">
+            <summary>
+            <para>Throws when unhandable exception occurs in the application</para>
+            <para>You will get an exception object for further debugging</para>
+            </summary>
+        </member>
+        <member name="E:FireTime.FireStreamEvent.OnAdded">
+            <summary>
+            <para>Fires when a new data is added to the monitoring path provided by you.</para>
+            <para>A (string) containing Path and a (JToken) containing new data will be dispatched with this event</para>
+            </summary>
+        </member>
+        <member name="E:FireTime.FireStreamEvent.OnUpdated">
+            <summary>
+            <para>Fires when any existing path inside the monitoring path is replaced by new data or when updated.</para>
+            <para>A (string) containing Path a (JToken) containing old data and a (JToken) containing updated data will be dispatched with this event</para>
+            </summary>
+        </member>
+        <member name="E:FireTime.FireStreamEvent.OnRemoved">
+            <summary>
+            <para>Fires whenever any existing data is removed from the server</para>
+            <para>A (string) containing Path and a (JToken) containing previous data will be dispatched with this event</para>
+            </summary>
+        </member>
+        <member name="E:FireTime.FireStreamEvent.OnMonitoringStarted">
+            <summary>
+            Fires whenever the listner starts to monitor for the db changes or whenever the listner restarts the monitoring
+            </summary>
+        </member>
+        <member name="T:FireTime.AddedEventArgs">
+            <summary>
+            Holds the data and information for the Added event
+            </summary>
+        </member>
+        <member name="P:FireTime.AddedEventArgs.Path">
+            <summary>
+            Get the relative Path to the resource which has been altered
+            Path strings are seperated by the Firebase specific delimiter character '/'
+            </summary>
+        </member>
+        <member name="P:FireTime.AddedEventArgs.AddedData">
+            <summary>
+            Get the newly added data for the specified path
+            </summary>
+        </member>
+        <member name="T:FireTime.UpdatedEventArgs">
+            <summary>
+            Holds the data and information for the Updated event
+            </summary>
+        </member>
+        <member name="P:FireTime.UpdatedEventArgs.Path">
+            <summary>
+            Get the relative Path to the resource which has been altered
+            Path strings are seperated by the Firebase specific delimiter character '/'
+            </summary>
+        </member>
+        <member name="P:FireTime.UpdatedEventArgs.OldData">
+            <summary>
+            Get the old/previous data associated with the resource at the provided path
+            </summary>
+        </member>
+        <member name="P:FireTime.UpdatedEventArgs.UpdatedData">
+            <summary>
+            Get the newly updated data for the specified path
+            </summary>
+        </member>
+        <member name="T:FireTime.RemovedEventArgs">
+            <summary>
+            Holds the data and information for the Removed event
+            </summary>
+        </member>
+        <member name="P:FireTime.RemovedEventArgs.Path">
+            <summary>
+            Get the relative Path to the resource which has been altered
+            Path strings are seperated by the Firebase specific delimiter character '/'
+            </summary>
+        </member>
+        <member name="P:FireTime.RemovedEventArgs.PreviousData">
+            <summary>
+            Get the retrieved data for the specified path before being removed
+            </summary>
+        </member>
+    </members>
+</doc>
