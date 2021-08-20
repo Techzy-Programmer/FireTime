@@ -1,7 +1,7 @@
 # FireTime
  * ▶️ The Firebase realtime database wrapper for **C#.NET**
  * 🌠 Works on Firebase REST API service with live event streaming
- * ✳️ Provides root JSON data as **JToken** object syncronized with server in realtime
+ * ✳️ Provides root JSON data as [**JToken**](https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_Linq_JToken.htm) object syncronized with server in realtime
 ----
 
 ### Downloading & Installation Of Library
@@ -119,6 +119,26 @@ else
     Console.WriteLine("Request was sucessfull, Node with all nested data has been removed!\n");
 ```
 * > Please visit [FireTime.Example](https://github.com/Techzy-Programmer/FireTime/blob/e6c30acef07e69564d3c0e463e2821b23aeea142/FireTime.Example/Update-Remove-Example.cs#L88) section to see full implementation on how to properly handle the Remove Response
+----
+
+### Contributing Guidelines
+
 ~~~~
-Have FUN Enjoy 🥰!
+This Repo is currently in it's infancy state so, bugs and problems may occur!
+We strictly want a huge contributing Community to make FireTime robust.
+Please check below to know how to contribute.
 ~~~~
+
+* #### Technical Contributions
+###### If you're a developer and know c# and .net languages then you can contribute. If you find any issue or bug then kindly initiale a issue request on github asap and mention the file and line mo where you are having the problems with potential fixes. If you want to request for new feature or for any code fixes then initiate a pull request with proper comments and label, I will verify and merge it.
+
+* #### Financial Contributioons
+###### If you are not from a technical background and found this library useful then you can donate us to contribute financially.<br/> I accept Bitcoin(BTC), Litecoin(LTC), Ethereum(ETH) and Dogecoin(DOGE)<br/> Any support to the following crypto addresses is appreciated:
+> Bitcoin(BTC) => **bc1qpn87859y0cmrka5yarg0y7u2y96wtkzjczzm9d** <br/>
+> Litecoin(LTC) => **LTwUNH5LJuu5c1QtSm78a93PWFPW72u5kC** <br/>
+> Ethereum(ETH) => **0xC6336b712Bec53beC85aA9611C23570c5072AD5D** <br/>
+> Dogecoin(Doge) => **DT6T8juTzguG17uNQMJNcBdPki5CF75iQT** <br/>
+----
+
+### License Term
+##### FireTime library is governed under the opensource [MIT License](https://en.wikipedia.org/wiki/MIT_License).<br/>We here by grant a free usage, modification, and commercial usage of this project without limitation.<br/>However, copyright credits must be given to the original author.
