@@ -23,8 +23,8 @@ namespace FireTime.Private
 
         internal StreamResponse Monitor(string ListenPath)
         {
-            var SInst = new StreamResponse();
-            SInst.StartDetection(GetCookedURI(ListenPath));
+            var SInst = new StreamResponse(GetCookedURI(ListenPath));
+            SInst.StartDetection();
             return SInst;
         }
 

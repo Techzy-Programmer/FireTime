@@ -18,11 +18,14 @@ namespace FireTime.Response
     {
         #region Declaration
 
-        private string PPth = "";
-        private Thread Worker = null;
+        private string PPth; // Global pre path config
+        private long WorkerID; // Prevent multiple instance of same worker thread
+        private Thread Worker = null; // Base worker thread
         private JToken RootData = null; // Base local cache object to store and sync with server data
         private bool IsReListen = false; // To be dispatched along events
         private bool HasCancelled = false; // Custom Cancellation Implementation
+        private readonly Uri FireURI = null; // Root Uri object used in connection
+        private readonly ReConnector AutoConnect; // Custom implementation of reconnection
 
         /// <summary>
         /// <para>Get the copy of local cache which represents the synchronized state of data with the server</para>
@@ -40,12 +43,17 @@ namespace FireTime.Response
 
         #region Base Methods
 
-        internal StreamResponse()
-            => Changes = new FireStreamEvent();
+        internal StreamResponse(Uri _WorkUri)
+        {
+            FireURI = _WorkUri;
+            Changes = new FireStreamEvent();
+            AutoConnect = new ReConnector(this);
+        }
 
-        internal void StartDetection(Uri ABSMonitorPTH)
+        internal void StartDetection()
         {
             Thread.Sleep(500);
+
             Worker = new Thread(async () =>
             {
                 var MClient = new HttpClient(new HttpClientHandler
@@ -54,31 +62,45 @@ namespace FireTime.Response
                     MaxAutomaticRedirections = 10
                 }, true);
 
-                var StreamReq = new HttpRequestMessage(HttpMethod.Get, ABSMonitorPTH);
+                HttpResponseMessage StreamResp;
+                var StreamReq = new HttpRequestMessage(HttpMethod.Get, FireURI);
                 MClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
-                var StreamResp = (await MClient.SendAsync(StreamReq, HttpCompletionOption.ResponseHeadersRead));
-                try { StreamResp.EnsureSuccessStatusCode(); } catch (Exception Ep) { Changes.WarnError(Ep); return; }
 
-                if (StreamResp.IsSuccessStatusCode)
+                try
                 {
-                    Changes.NotifyMonitoring(IsReListen);
-                    IsReListen = true;
+                    StreamResp = (await MClient.
+                    SendAsync(StreamReq, HttpCompletionOption.ResponseHeadersRead)).
+                    EnsureSuccessStatusCode();
+                }
+                catch (Exception Ep)
+                {
+                    if (IsReListen) StartDetection();
+                    else Changes.WarnError(Ep);
+                    return;
+                }
 
-                    using (StreamResp)
-                    using (Stream SCnt = await StreamResp.Content.ReadAsStreamAsync())
-                    using (StreamReader SRLive = new StreamReader(SCnt))
+                Changes.NotifyMonitoring(IsReListen);
+                AutoConnect.ReStartDetection();
+                IsReListen = true;
+
+                using (StreamResp) // Memory management with 'using' blocks
+                using (Stream SCnt = await StreamResp.Content.ReadAsStreamAsync())
+                using (StreamReader SRLive = new StreamReader(SCnt))
+                {
+                    WorkerID++;
+                    string SEvent = string.Empty;
+                    string WIDCurrent = WorkerID.ToString();
+
+                    try
                     {
-                        string SEvent = string.Empty;
-
-                        while (true) // Infinitely loop for the data
+                        while (true) // Infinitely loop for data
                         {
-                            try
+                            string ReadData = await SRLive.ReadLineAsync(); // Blocks here till a new data is received from Firebase server
+                            if (HasCancelled || !WIDCurrent.Equals(WorkerID.ToString())) break; // Silently exit the loop when any condition matches
+                            
+                            if (!string.IsNullOrWhiteSpace(ReadData))
                             {
-                                string ReadData = await SRLive.ReadLineAsync(); // Blocks here till a new data is received from Firebase server
-                                if (HasCancelled) break; // Silently exit the loop on user request and release resources
-                                if (string.IsNullOrWhiteSpace(ReadData)) continue;
-
-                                //Console.WriteLine(ReadData); continue;
+                                AutoConnect.ReStartDetection();
 
                                 if (ReadData.StartsWith("event:")) // Check if server sent the event name
                                 {
@@ -95,14 +117,9 @@ namespace FireTime.Response
 
                                 SEvent = string.Empty; // Make the event name empty
                             }
-                            catch (Exception Ep)
-                            {
-                                Changes.WarnError(Ep); // [To-Do] Remove
-                                if (!HasCancelled)
-                                    StartDetection(ABSMonitorPTH);
-                            }
                         }
                     }
+                    catch { if (!HasCancelled) StartDetection(); return; }
                 }
             });
 
@@ -432,6 +449,7 @@ namespace FireTime.Response
         public void Detach()
         {
             Changes.HasStopped = true;
+            AutoConnect.Destroy();
             HasCancelled = true;
         }
 
