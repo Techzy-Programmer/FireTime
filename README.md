@@ -19,6 +19,7 @@ You can use either of these two methods to get started.
 - [ ] Add auto reconnection when network drops(while streaming). **`In-Progress`**
 - [ ] Add Push support **`Waiting`**
 - [ ] Add Queries & Request filtering **`Waiting`**
+----
 
 ### Usage (Mini Docs)
 > **NOTE :** **FireTime** depends upon [**Newtonsoft.Json**](https://github.com/JamesNK/Newtonsoft.Json) for proper functioning.<br/>
