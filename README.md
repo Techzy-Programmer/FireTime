@@ -16,7 +16,7 @@ You can use either of these two methods to get started.
 - [x] Read, Write, Update & Remove request.
 - [x] Live streaming from REST API.
 - [x] Dynamic support for server interactions.
-- [ ] Add auto reconnection when network drops(while streaming). **`In-Progress`**
+- [x] Add auto reconnection when network drops(while streaming). **`In-Progress`**
 - [ ] Add Push support **`Waiting`**
 - [ ] Add Queries & Request filtering **`Waiting`**
 ----
