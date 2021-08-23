@@ -12,6 +12,14 @@ You can use either of these two methods to get started.
 > Project will be shipped to **Nuget PM** very soon.... 😀
 ----
 
+### Task & Features
+- [x] Read, Write, Update & Remove request.
+- [x] Live streaming from REST API.
+- [x] Dynamic support for server interactions.
+- [ ] Add auto reconnection when network drops(while streaming). **`In-Progress`**
+- [ ] Add Push support **`Waiting`**
+- [ ] Add Queries & Request filtering **`Waiting`**
+
 ### Usage (Mini Docs)
 > **NOTE :** **FireTime** depends upon [**Newtonsoft.Json**](https://github.com/JamesNK/Newtonsoft.Json) for proper functioning.<br/>
 > Please [Visit Here](https://github.com/Techzy-Programmer/FireTime/tree/master/FireTime.Example) for complete examples with proper documentations.
