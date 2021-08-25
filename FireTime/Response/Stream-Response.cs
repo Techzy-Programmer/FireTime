@@ -72,10 +72,9 @@ namespace FireTime.Response
                     SendAsync(StreamReq, HttpCompletionOption.ResponseHeadersRead)).
                     EnsureSuccessStatusCode();
                 }
-                catch (Exception Ep)
+                catch
                 {
-                    if (IsReListen) StartDetection();
-                    else Changes.WarnError(Ep);
+                    StartDetection();
                     return;
                 }
 
