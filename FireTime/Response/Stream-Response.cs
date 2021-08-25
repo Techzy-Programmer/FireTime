@@ -80,6 +80,7 @@ namespace FireTime.Response
 
                 Changes.NotifyMonitoring(IsReListen);
                 AutoConnect.ReStartDetection();
+                Changes.HasPrevented = true;
                 IsReListen = true;
 
                 using (StreamResp) // Memory management with 'using' blocks

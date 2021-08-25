@@ -9,7 +9,7 @@ namespace FireTime
     public class FireStreamEvent
     {
         internal bool HasStopped = false;
-        internal bool HasPrevented = true;
+        internal bool HasPrevented { get; set; } = true;
 
         /// <summary>
         /// <para>Throws when unhandable exception occurs in the application</para>
